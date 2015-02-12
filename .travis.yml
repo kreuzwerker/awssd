@@ -1,0 +1,10 @@
+language: go
+go:
+  - 1.4
+  - tip
+sudo: false
+install:
+  - go get golang.org/x/tools/cmd/cover
+  - make install
+script:
+  - make test
