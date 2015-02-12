@@ -20,10 +20,11 @@ test:
 	go test -cover
 
 install:
-	go get -u github.com/awslabs/aws-sdk-go/aws
-	go get -u github.com/awslabs/aws-sdk-go/gen/ec2
-	go get -u github.com/awslabs/aws-sdk-go/gen/route53
-	go get -u github.com/clipperhouse/gen
-	go get -u github.com/deckarep/golang-set
-	go get -u github.com/stretchr/testify/assert
+	go get github.com/awslabs/aws-sdk-go/aws
+	go get github.com/awslabs/aws-sdk-go/gen/ec2
+	go get github.com/awslabs/aws-sdk-go/gen/route53
+	go get github.com/deckarep/golang-set
+	go get github.com/clipperhouse/gen
+	go get github.com/clipperhouse/set
+	go get github.com/stretchr/testify/assert
 	gen

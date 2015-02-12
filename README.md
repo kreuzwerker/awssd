@@ -1,5 +1,7 @@
 # AWS service DNS
 
+[![Build Status](https://travis-ci.org/kreuzwerker/awssd.svg)](https://travis-ci.org/kreuzwerker/awssd)
+
 AWS service DNS (`awssd`) is a utility that creates Route53 A records for EC2 instances following a tag convention. This can be used to support reverse proxy / load balancing strategies other then ELB for autoscaling groups or other fluid groups of EC2 instances.
 
 ## Usage
