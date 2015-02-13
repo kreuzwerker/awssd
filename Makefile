@@ -13,8 +13,8 @@ clean:
 
 release: clean build
 	github-release release --user $(USER) --repo $(REPO) --tag $(VERSION) -s $(TOKEN)
-	github-release upload --user $(USER) --repo $(REPO) --tag $(VERSION) -s $(TOKEN) --name $(REPO) -osx --file out/darwin/$(REPO)
-	github-release upload --user $(USER) --repo $(REPO) --tag $(VERSION) -s $(TOKEN) --name $(REPO) -linux --file out/linux/$(REPO)
+	github-release upload --user $(USER) --repo $(REPO) --tag $(VERSION) -s $(TOKEN) --name $(REPO)-osx --file out/darwin/$(REPO)
+	github-release upload --user $(USER) --repo $(REPO) --tag $(VERSION) -s $(TOKEN) --name $(REPO)-linux --file out/linux/$(REPO)
 
 test:
 	go test -cover
