@@ -39,7 +39,8 @@ Let an account contain 6 instances:
 
 Calling `awssd` like this
 
-`awssd -d api.example.com -f tag:environment=staging -p=true -g service -v`
+* `awssd -d api.example.com -f tag:environment=staging -p=true -g service -v` (when running the binary build) or
+* `docker run -it kreuzwerker/awssd -d api.example.com -f tag:environment=staging -p=true -g service -v` (when running it via Docker)
 
 will
 
