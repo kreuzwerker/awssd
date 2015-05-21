@@ -21,8 +21,9 @@ test:
 
 install:
 	go get github.com/awslabs/aws-sdk-go/aws
+	go get github.com/awslabs/aws-sdk-go/service/ec2
+	go get github.com/awslabs/aws-sdk-go/service/route53
 	go get github.com/deckarep/golang-set
 	go get github.com/clipperhouse/gen
 	go get github.com/clipperhouse/set
 	go get github.com/stretchr/testify/assert
-	gen
