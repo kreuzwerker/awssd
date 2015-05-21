@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/awslabs/aws-sdk-go/aws"
-	"github.com/awslabs/aws-sdk-go/gen/ec2"
-	"github.com/awslabs/aws-sdk-go/gen/route53"
+	"github.com/awslabs/aws-sdk-go/service/ec2"
+	"github.com/awslabs/aws-sdk-go/service/route53"
 )
 
 const (
@@ -22,11 +22,17 @@ type Client struct {
 	zoneId string
 }
 
-func NewClient(cp aws.CredentialsProvider, config *Config) *Client {
+func NewClient(config *Config) *Client {
+
+	ec2Config := *aws.DefaultConfig
+	r53Config := *aws.DefaultConfig
+
+	ec2Config.Region = config.Region
+
 	return &Client{
 		config: config,
-		ec2c:   ec2.New(cp, config.Region, nil),
-		r53c:   route53.New(cp, GlobalRegion, nil),
+		ec2c:   ec2.New(&ec2Config),
+		r53c:   route53.New(&r53Config),
 	}
 }
 
@@ -74,19 +80,19 @@ func (c *Client) Diff() error {
 
 func (c *Client) upsertRecordSet(name string, ip []IP) error {
 
-	var rr []route53.ResourceRecord
+	var rr []*route53.ResourceRecord
 
 	for _, e := range ip {
 		rr = append(rr, e.ToResourceRecord())
 	}
 
 	ch := route53.Change{
-		Action: aws.String(route53.ChangeActionUpsert),
+		Action: aws.String("UPSERT"),
 		ResourceRecordSet: &route53.ResourceRecordSet{
 			Name:            aws.String(name),
 			ResourceRecords: rr,
 			TTL:             aws.Long(c.config.TTL),
-			Type:            aws.String(route53.RRTypeA),
+			Type:            aws.String("A"),
 		},
 	}
 
@@ -96,13 +102,13 @@ func (c *Client) upsertRecordSet(name string, ip []IP) error {
 	}
 
 	cb := &route53.ChangeBatch{
-		Changes: []route53.Change{ch},
+		Changes: []*route53.Change{&ch},
 		Comment: aws.String(fmt.Sprintf("awssd-addRecordSet %s: %q", name, ip)),
 	}
 
 	log.Printf("[  INFO ] updating %s with %q", name, ip)
 
-	resp, err := c.r53c.ChangeResourceRecordSets(&route53.ChangeResourceRecordSetsRequest{
+	resp, err := c.r53c.ChangeResourceRecordSets(&route53.ChangeResourceRecordSetsInput{
 		ChangeBatch:  cb,
 		HostedZoneID: aws.String(c.zoneId),
 	})
@@ -124,7 +130,7 @@ func (c *Client) getEc2Map() (Mapping, error) {
 		return nil, err
 	}
 
-	resp, err := c.ec2c.DescribeInstances(&ec2.DescribeInstancesRequest{
+	resp, err := c.ec2c.DescribeInstances(&ec2.DescribeInstancesInput{
 		Filters: filters,
 	})
 
@@ -172,7 +178,7 @@ func (c *Client) getEc2Map() (Mapping, error) {
 
 func (c *Client) getZoneId() (string, error) {
 
-	resp, err := c.r53c.ListHostedZones(&route53.ListHostedZonesRequest{})
+	resp, err := c.r53c.ListHostedZones(&route53.ListHostedZonesInput{})
 
 	if err != nil {
 		return "", err
@@ -202,7 +208,7 @@ func (c *Client) getZoneId() (string, error) {
 
 func (c *Client) getZoneMap() (Mapping, error) {
 
-	resp, err := c.r53c.ListResourceRecordSets(&route53.ListResourceRecordSetsRequest{
+	resp, err := c.r53c.ListResourceRecordSets(&route53.ListResourceRecordSetsInput{
 		HostedZoneID: aws.String(c.zoneId),
 	})
 
@@ -228,7 +234,7 @@ func (c *Client) getZoneMap() (Mapping, error) {
 
 }
 
-func findTagValue(key string, tags []ec2.Tag) *string {
+func findTagValue(key string, tags []*ec2.Tag) *string {
 
 	for _, e := range tags {
 

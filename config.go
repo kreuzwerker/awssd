@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/awslabs/aws-sdk-go/aws"
-	"github.com/awslabs/aws-sdk-go/gen/ec2"
+	"github.com/awslabs/aws-sdk-go/service/ec2"
 )
 
 var Debug bool
@@ -20,7 +20,7 @@ type Config struct {
 	TTL           int64
 }
 
-func (c *Config) ConvertFilter() (filters []ec2.Filter, err error) {
+func (c *Config) ConvertFilter() (filters []*ec2.Filter, err error) {
 
 	if c.Filter == "" {
 		return filters, err
@@ -34,9 +34,15 @@ func (c *Config) ConvertFilter() (filters []ec2.Filter, err error) {
 			return nil, fmt.Errorf("cannot create filter from filter specification '%v'", filter)
 		}
 
-		filters = append(filters, ec2.Filter{
-			aws.String(filter[0]),
-			filter[1:],
+		var values []*string
+
+		for _, ee := range filter[1:] {
+			values = append(values, &ee)
+		}
+
+		filters = append(filters, &ec2.Filter{
+			Name:   aws.String(filter[0]),
+			Values: values,
 		})
 
 	}

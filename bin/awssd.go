@@ -6,12 +6,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/awslabs/aws-sdk-go/aws"
 	"github.com/kreuzwerker/awssd"
 )
 
 const (
-	Autodetect    = ""
 	Empty         = ""
 	RegionDefault = "eu-west-1"
 )
@@ -54,7 +52,7 @@ func main() {
 		log.Printf("[ DEBUG ] Performing dry-run, won't touch any records")
 	}
 
-	client := awssd.NewClient(aws.DetectCreds(Autodetect, Autodetect, Autodetect), config)
+	client := awssd.NewClient(config)
 
 	if err := client.Diff(); err != nil {
 		log.Fatalf("[ ERROR ] %v", err)

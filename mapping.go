@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/awslabs/aws-sdk-go/aws"
-	"github.com/awslabs/aws-sdk-go/gen/route53"
+	"github.com/awslabs/aws-sdk-go/service/route53"
 )
 
 type Action func(name string, ip []IP) error
@@ -14,8 +14,8 @@ type Action func(name string, ip []IP) error
 // +gen set
 type IP string
 
-func (i IP) ToResourceRecord() route53.ResourceRecord {
-	return route53.ResourceRecord{
+func (i IP) ToResourceRecord() *route53.ResourceRecord {
+	return &route53.ResourceRecord{
 		Value: aws.String(string(i)),
 	}
 }
