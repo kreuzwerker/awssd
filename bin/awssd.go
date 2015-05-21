@@ -24,7 +24,7 @@ func main() {
 		filter        = flag.String("f", Empty, "EC2 filter in key=value notation or multiple, comma-separated filters in the same notation")
 		groupBy       = flag.String("g", Empty, "EC2 tag key to group instances by")
 		help          = flag.Bool("h", false, "display usage informations")
-		preferPrivate = flag.Bool("p", true, "Prefer private IP addresses (before public ones)")
+		preferPrivate = flag.Bool("p", true, "Prefer private IP addresses (instead of public ones)")
 		region        = flag.String("r", RegionDefault, fmt.Sprintf("AWS region for EC2 instances, default to %s", RegionDefault))
 		ttl           = flag.Int64("t", 60, "TTL for DNS records, defaults to 60")
 		verbose       = flag.Bool("v", false, "Be verbose")
