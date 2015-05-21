@@ -36,10 +36,12 @@ func (m Mapping) Add(name, ip string) {
 
 }
 
-func (m Mapping) Diff(state Mapping, upsert Action) error {
+func (m Mapping) Diff(state Mapping, upsert Action) (bool, error) {
+
+	var action = false
 
 	if reflect.DeepEqual(m, state) {
-		return nil
+		return action, nil
 	}
 
 	for tk, tv := range m {
@@ -47,20 +49,24 @@ func (m Mapping) Diff(state Mapping, upsert Action) error {
 		if ov, present := state[tk]; !present {
 
 			if err := upsert(tk, tv.ToSlice()); err != nil {
-				return err
+				return action, err
 			}
+
+			action = true
 
 		} else if diff := tv.SymmetricDifference(ov); diff.Cardinality() > 0 {
 
 			if err := upsert(tk, tv.ToSlice()); err != nil {
-				return err
+				return action, err
 			}
+
+			action = true
 
 		}
 
 	}
 
-	return nil
+	return action, nil
 
 }
 

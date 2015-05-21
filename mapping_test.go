@@ -22,9 +22,11 @@ func TestDiffError(t *testing.T) {
 
 	err := fmt.Errorf("boom")
 
-	assert.Equal(t, err, ec2.Diff(r53, func(host string, ips []IP) error {
+	_, err2 := ec2.Diff(r53, func(host string, ips []IP) error {
 		return err
-	}))
+	})
+
+	assert.Equal(t, err, err2)
 
 }
 
@@ -39,7 +41,7 @@ func TestDiff(t *testing.T) {
 
 			var a sort.StringSlice
 
-			err := ec2.Diff(r53, func(host string, ips []IP) error {
+			_, err := ec2.Diff(r53, func(host string, ips []IP) error {
 
 				var s sort.StringSlice
 
@@ -64,8 +66,10 @@ func TestDiff(t *testing.T) {
 	ec2.Add("a.api.example.com", "1.2.3.4")
 	r53.Add("a.api.example.com", "1.2.3.4")
 
+	_, err := ec2.Diff(r53, nil)
+
 	// equal mapping
-	assert.Nil(ec2.Diff(r53, nil))
+	assert.Nil(err)
 
 	// change ec2
 	ec2.Add("a.api.example.com", "1.2.3.5")

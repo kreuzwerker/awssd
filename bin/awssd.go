@@ -54,8 +54,10 @@ func main() {
 
 	client := awssd.NewClient(config)
 
-	if err := client.Diff(); err != nil {
+	if changes, err := client.Diff(); err != nil {
 		log.Fatalf("[ ERROR ] %v", err)
+	} else if !changes {
+		os.Exit(1)
 	}
 
 }

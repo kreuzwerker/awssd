@@ -36,14 +36,14 @@ func NewClient(config *Config) *Client {
 	}
 }
 
-func (c *Client) Diff() error {
+func (c *Client) Diff() (bool, error) {
 
 	if c.zoneId == "" {
 
 		zoneId, err := c.getZoneId()
 
 		if err != nil {
-			return err
+			return false, err
 		}
 
 		if Debug {
@@ -57,7 +57,7 @@ func (c *Client) Diff() error {
 	zoneMap, err := c.getZoneMap()
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	if Debug {
@@ -67,7 +67,7 @@ func (c *Client) Diff() error {
 	ec2Map, err := c.getEc2Map()
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	if Debug {

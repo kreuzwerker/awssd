@@ -26,6 +26,11 @@ Optionally you can:
 
 Credential detection follow the aws-sdk standard (checking environment variables, profile configuration and instance profiles).
 
+### Exit status
+
+* When `awssd` changes records (or would change those, in case of a dry-run) the exit status is 0
+* In case of a no-op (or potential no-op, in case of a dry-run) the exit status is 1
+
 ### Example
 
 Let an account contain 6 instances:
