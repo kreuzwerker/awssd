@@ -64,6 +64,36 @@ bar.api.example.com.		60	IN	A	2.2.3.4
 bar.api.example.com.		60	IN	A	4.2.3.4
 ```
 
+### IAM Policy
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "ec2:DescribeInstances"
+        "route53:ListHostedZones"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Action": [
+        "route53:ChangeResourceRecordSets",
+        "route53:ListResourceRecordSets"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:route53:::hostedzone/hosted-zone-id-for-your-service-zone"
+      ]
+    }
+  ]
+}
+```
+
 ## Future roadmap
 
 * [ ] Support deletion of records as soon as we have metadata / tag support in R53
